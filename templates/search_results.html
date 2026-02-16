@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Search Results - {{ query }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <h2 class="mb-4">Search Results for "{{ query }}"</h2>
+            <p class="text-muted mb-4">Found {{ count }} medicine(s)</p>
+            
+            {% if medicines %}
+                <div class="row">
+                    {% for medicine in medicines %}
+                    <div class="col-md-6 mb-3">
+                        <a href="{% url 'results' medicine.id %}" class="text-decoration-none">
+                            <div class="card medicine-card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title text-primary">{{ medicine.brand_name }}</h5>
+                                    <p class="card-text mb-1">
+                                        <strong>Composition:</strong> {{ medicine.composition }}
+                                    </p>
+                                    <p class="card-text mb-1">
+                                        <strong>Strength:</strong> {{ medicine.strength }}
+                                    </p>
+                                    <p class="card-text text-muted">
+                                        <small>{{ medicine.manufacturer }}</small>
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="alert alert-info">
+                    No medicines found matching "{{ query }}". Please try a different search term.
+                </div>
+            {% endif %}
+            
+            <div class="mt-4">
+                <a href="{% url 'home' %}" class="btn btn-secondary">← Back to Search</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

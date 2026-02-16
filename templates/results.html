@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ medicine.brand_name }} - Price Comparison{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <!-- Medicine Details -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title">{{ medicine.brand_name }}</h2>
+                    <p class="mb-1"><strong>Composition:</strong> {{ medicine.composition }}</p>
+                    <p class="mb-1"><strong>Strength:</strong> {{ medicine.strength }}</p>
+                    <p class="mb-0"><strong>Manufacturer:</strong> {{ medicine.manufacturer }}</p>
+                </div>
+            </div>
+
+            <!-- Price Comparison -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">💰 Price Comparison</h4>
+                </div>
+                <div class="card-body">
+                    {% if prices %}
+                        {% if savings_percentage > 0 %}
+                        <div class="alert alert-success mb-4">
+                            <strong>💡 Potential Savings:</strong> You can save up to 
+                            <span class="badge bg-success fs-6">{{ savings_percentage }}%</span>
+                            by choosing the cheapest option!
+                        </div>
+                        {% endif %}
+                        
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Pharmacy</th>
+                                        <th>Price</th>
+                                        <th>Last Updated</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for price in prices %}
+                                    <tr {% if price.price == lowest_price %}class="table-success"{% endif %}>
+                                        <td>
+                                            {{ price.pharmacy.name }}
+                                            {% if price.price == lowest_price %}
+                                            <span class="badge bg-success ms-2">Cheapest</span>
+                                            {% endif %}
+                                        </td>
+                                        <td><strong>₹{{ price.price }}</strong></td>
+                                        <td>{{ price.last_updated|date:"M d, Y" }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            No pricing information available for this medicine.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Alternatives -->
+            {% if alternatives %}
+            <div class="card mb-4">
+                <div class="card-header bg-info text-white">
+                    <h4 class="mb-0">💊 Alternative Medicines (Same Composition)</h4>
+                </div>
+                <div class="card-body">
+                    <p class="mb-3">These medicines have the same composition and may be cheaper alternatives:</p>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Brand Name</th>
+                                    <th>Manufacturer</th>
+                                    <th>Lowest Price</th>
+                                    <th>Available At</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for alt in alternatives %}
+                                <tr>
+                                    <td><strong>{{ alt.medicine.brand_name }}</strong></td>
+                                    <td>{{ alt.medicine.manufacturer }}</td>
+                                    <td>
+                                        <strong>₹{{ alt.lowest_price }}</strong>
+                                        {% if lowest_price and alt.lowest_price < lowest_price %}
+                                        <span class="badge bg-success ms-2">Cheaper!</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ alt.pharmacy_name }}</td>
+                                    <td>
+                                        <a href="{% url 'results' alt.medicine.id %}" class="btn btn-sm btn-outline-primary">
+                                            View Details
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="mt-4">
+                <a href="{% url 'home' %}" class="btn btn-secondary">← Back to Search</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

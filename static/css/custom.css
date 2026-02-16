@@ -1,0 +1,66 @@
+/* Custom styles for Medicine Price Comparison */
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+.hero-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.hero-section h1 {
+    color: white;
+}
+
+.hero-section .lead {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.search-box {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.medicine-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+}
+
+.medicine-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.table-success {
+    background-color: #d1e7dd !important;
+}
+
+.badge {
+    font-weight: 600;
+}
+
+footer {
+    margin-top: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero-section h1 {
+        font-size: 2rem;
+    }
+    
+    .search-box .d-flex {
+        flex-direction: column;
+    }
+    
+    .search-box .btn {
+        width: 100%;
+    }
+}
