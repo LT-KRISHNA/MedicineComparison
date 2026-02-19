@@ -7,27 +7,48 @@
     <div class="row">
         <div class="col-lg-10 mx-auto">
             <!-- Medicine Details -->
-            <div class="card mb-4">
+            <div class="card mb-4 {% if medicine.is_generic %}border-success{% endif %}">
                 <div class="card-body">
-                    <h2 class="card-title">{{ medicine.brand_name }}</h2>
+                    <h2 class="card-title">
+                        {{ medicine.brand_name }}
+                        {% if medicine.is_generic %}
+                        <span class="badge bg-success">Generic Medicine</span>
+                        {% else %}
+                        <span class="badge bg-primary">Branded Medicine</span>
+                        {% endif %}
+                    </h2>
                     <p class="mb-1"><strong>Composition:</strong> {{ medicine.composition }}</p>
                     <p class="mb-1"><strong>Strength:</strong> {{ medicine.strength }}</p>
-                    <p class="mb-0"><strong>Manufacturer:</strong> {{ medicine.manufacturer }}</p>
+                    <p class="mb-3"><strong>Manufacturer:</strong> {{ medicine.manufacturer }}</p>
+                    
+                    {% if medicine.description %}
+                    <div class="alert alert-info mb-2">
+                        <strong>About:</strong> {{ medicine.description }}
+                    </div>
+                    {% endif %}
+                    
+                    {% if medicine.uses %}
+                    <p class="mb-1"><strong>Uses:</strong> {{ medicine.uses }}</p>
+                    {% endif %}
+                    
+                    {% if medicine.side_effects %}
+                    <p class="mb-0"><strong>Side Effects:</strong> {{ medicine.side_effects }}</p>
+                    {% endif %}
                 </div>
             </div>
 
             <!-- Price Comparison -->
             <div class="card mb-4">
                 <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">💰 Price Comparison</h4>
+                    <h4 class="mb-0">💰 General Price Range</h4>
                 </div>
                 <div class="card-body">
                     {% if prices %}
                         {% if savings_percentage > 0 %}
                         <div class="alert alert-success mb-4">
-                            <strong>💡 Potential Savings:</strong> You can save up to 
+                            <strong>💡 Price Variation:</strong> Prices vary by up to 
                             <span class="badge bg-success fs-6">{{ savings_percentage }}%</span>
-                            by choosing the cheapest option!
+                            across different pharmacies!
                         </div>
                         {% endif %}
                         
@@ -36,7 +57,8 @@
                                 <thead>
                                     <tr>
                                         <th>Pharmacy</th>
-                                        <th>Price</th>
+                                        <th>Price (Approx.)</th>
+                                        <th>Price Type</th>
                                         <th>Last Updated</th>
                                     </tr>
                                 </thead>
@@ -46,15 +68,28 @@
                                         <td>
                                             {{ price.pharmacy.name }}
                                             {% if price.price == lowest_price %}
-                                            <span class="badge bg-success ms-2">Cheapest</span>
+                                            <span class="badge bg-success ms-2">Lowest</span>
                                             {% endif %}
                                         </td>
                                         <td><strong>₹{{ price.price }}</strong></td>
+                                        <td>
+                                            {% if price.price_type == 'mrp' %}
+                                            <span class="badge bg-secondary">MRP</span>
+                                            {% elif price.price_type == 'online' %}
+                                            <span class="badge bg-info">Online</span>
+                                            {% else %}
+                                            <span class="badge bg-primary">Average</span>
+                                            {% endif %}
+                                        </td>
                                         <td>{{ price.last_updated|date:"M d, Y" }}</td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
                             </table>
+                        </div>
+                        
+                        <div class="alert alert-warning mt-3">
+                            <small><strong>Note:</strong> Prices shown are general/average prices and may vary. Please check with your local pharmacy for exact current prices.</small>
                         </div>
                     {% else %}
                         <div class="alert alert-info">
@@ -64,37 +99,85 @@
                 </div>
             </div>
 
+            <!-- Generic Benefits (if viewing branded medicine with generic alternatives) -->
+            {% if has_generic_alternatives and not medicine.is_generic %}
+            <div class="card mb-4 border-success">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">✨ Why Choose Generic Alternatives?</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for benefit in generic_benefits %}
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex">
+                                <div class="me-3 fs-3">{{ benefit.icon }}</div>
+                                <div>
+                                    <h6 class="mb-1">{{ benefit.title }}</h6>
+                                    <p class="mb-0"><small>{{ benefit.description }}</small></p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
             <!-- Alternatives -->
             {% if alternatives %}
             <div class="card mb-4">
-                <div class="card-header bg-info text-white">
+                <div class="card-header {% if has_generic_alternatives %}bg-success{% else %}bg-info{% endif %} text-white">
                     <h4 class="mb-0">💊 Alternative Medicines (Same Composition)</h4>
                 </div>
                 <div class="card-body">
-                    <p class="mb-3">These medicines have the same composition and may be cheaper alternatives:</p>
+                    <p class="mb-3">These medicines have the same active ingredient ({{ medicine.composition }}):</p>
                     <div class="table-responsive">
                         <table class="table table-hover">
                             <thead>
                                 <tr>
                                     <th>Brand Name</th>
+                                    <th>Type</th>
                                     <th>Manufacturer</th>
                                     <th>Lowest Price</th>
                                     <th>Available At</th>
+                                    <th>Savings</th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for alt in alternatives %}
-                                <tr>
-                                    <td><strong>{{ alt.medicine.brand_name }}</strong></td>
-                                    <td>{{ alt.medicine.manufacturer }}</td>
+                                <tr {% if alt.is_generic %}class="table-success"{% endif %}>
                                     <td>
-                                        <strong>₹{{ alt.lowest_price }}</strong>
-                                        {% if lowest_price and alt.lowest_price < lowest_price %}
-                                        <span class="badge bg-success ms-2">Cheaper!</span>
+                                        <strong>{{ alt.medicine.brand_name }}</strong>
+                                        {% if alt.is_generic %}
+                                        <span class="badge bg-success ms-1">Generic</span>
                                         {% endif %}
                                     </td>
-                                    <td>{{ alt.pharmacy_name }}</td>
+                                    <td>
+                                        {% if alt.is_generic %}
+                                        <span class="text-success">Generic</span>
+                                        {% else %}
+                                        <span class="text-primary">Branded</span>
+                                        {% endif %}
+                                    </td>
+                                    <td><small>{{ alt.medicine.manufacturer }}</small></td>
+                                    <td>
+                                        <strong>₹{{ alt.lowest_price }}</strong>
+                                    </td>
+                                    <td><small>{{ alt.pharmacy_name }}</small></td>
+                                    <td>
+                                        {% if alt.savings_amount > 0 %}
+                                        <span class="badge bg-success">
+                                            Save ₹{{ alt.savings_amount }} ({{ alt.savings_percentage }}%)
+                                        </span>
+                                        {% elif alt.savings_amount < 0 %}
+                                        <span class="badge bg-danger">
+                                            +₹{{ alt.savings_amount|floatformat:2|slice:"1:" }}
+                                        </span>
+                                        {% else %}
+                                        <span class="text-muted">Same price</span>
+                                        {% endif %}
+                                    </td>
                                     <td>
                                         <a href="{% url 'results' alt.medicine.id %}" class="btn btn-sm btn-outline-primary">
                                             View Details
@@ -105,6 +188,12 @@
                             </tbody>
                         </table>
                     </div>
+                    
+                    {% if has_generic_alternatives %}
+                    <div class="alert alert-success mt-3">
+                        <strong>💡 Tip:</strong> Generic medicines (highlighted in green) contain the same active ingredient and are equally effective, but cost significantly less!
+                    </div>
+                    {% endif %}
                 </div>
             </div>
             {% endif %}

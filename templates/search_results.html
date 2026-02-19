@@ -14,9 +14,14 @@
                     {% for medicine in medicines %}
                     <div class="col-md-6 mb-3">
                         <a href="{% url 'results' medicine.id %}" class="text-decoration-none">
-                            <div class="card medicine-card h-100">
+                            <div class="card medicine-card h-100 {% if medicine.is_generic %}border-success{% endif %}">
                                 <div class="card-body">
-                                    <h5 class="card-title text-primary">{{ medicine.brand_name }}</h5>
+                                    <h5 class="card-title text-primary">
+                                        {{ medicine.brand_name }}
+                                        {% if medicine.is_generic %}
+                                        <span class="badge bg-success ms-2">Generic</span>
+                                        {% endif %}
+                                    </h5>
                                     <p class="card-text mb-1">
                                         <strong>Composition:</strong> {{ medicine.composition }}
                                     </p>
@@ -26,6 +31,9 @@
                                     <p class="card-text text-muted">
                                         <small>{{ medicine.manufacturer }}</small>
                                     </p>
+                                    {% if medicine.description %}
+                                    <p class="card-text"><small>{{ medicine.description|truncatewords:15 }}</small></p>
+                                    {% endif %}
                                 </div>
                             </div>
                         </a>

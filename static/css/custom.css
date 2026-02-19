@@ -38,12 +38,31 @@ main {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
+.medicine-card.border-success {
+    border-width: 2px !important;
+}
+
 .table-success {
     background-color: #d1e7dd !important;
 }
 
 .badge {
     font-weight: 600;
+}
+
+.border-success {
+    border-color: #198754 !important;
+}
+
+.card.border-success {
+    border-width: 2px;
+}
+
+.generic-highlight {
+    background-color: #d1e7dd;
+    border-left: 4px solid #198754;
+    padding: 1rem;
+    margin-bottom: 1rem;
 }
 
 footer {

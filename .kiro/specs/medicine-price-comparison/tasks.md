@@ -1,3 +1,5 @@
+
+
 # Implementation Plan: Medicine Price Comparison & Alternative Suggestion System
 
 ## Overview
@@ -15,19 +17,19 @@ This implementation plan breaks down the Medicine Price Comparison system into d
   - _Requirements: 7.4, 7.5_
 
 - [ ] 2. Implement data models with validation
-  - [~] 2.1 Create Medicine model with fields and validation
+  - [ ] 2.1 Create Medicine model with fields and validation
     - Implement Medicine model with brand_name, composition, strength, manufacturer
     - Add database indexes on brand_name and composition
     - Add validation for non-empty brand_name and composition
     - _Requirements: 5.1, 10.1, 10.2_
   
-  - [~] 2.2 Create Pharmacy model with fields and validation
+  - [ ] 2.2 Create Pharmacy model with fields and validation
     - Implement Pharmacy model with name and website_url
     - Add unique constraint on name field
     - Add validation for non-empty name
     - _Requirements: 5.2, 10.4_
   
-  - [~] 2.3 Create Price model with relationships and validation
+  - [ ] 2.3 Create Price model with relationships and validation
     - Implement Price model with ForeignKeys to Medicine and Pharmacy
     - Add price field with validation for positive values
     - Add last_updated timestamp field
@@ -46,14 +48,14 @@ This implementation plan breaks down the Medicine Price Comparison system into d
     - **Property 13: Pharmacy validation rejects empty names**
     - **Validates: Requirements 10.1, 10.2, 10.3, 10.4**
 
-- [~] 3. Create and run database migrations
+- [ ] 3. Create and run database migrations
   - Generate initial migrations for all models
   - Apply migrations to create database schema
   - Verify database tables and indexes are created correctly
   - _Requirements: 5.1, 5.2, 5.3_
 
 - [ ] 4. Implement business logic services
-  - [~] 4.1 Create MedicineSearchService
+  - [ ] 4.1 Create MedicineSearchService
     - Implement search_medicines method with case-insensitive partial matching
     - Use Django ORM filter with icontains lookup
     - Order results by brand_name
@@ -65,7 +67,7 @@ This implementation plan breaks down the Medicine Price Comparison system into d
     - **Property 9: Search result limit enforcement**
     - **Validates: Requirements 1.1, 1.2, 1.3, 1.5, 9.3**
   
-  - [~] 4.3 Create PriceComparisonService
+  - [ ] 4.3 Create PriceComparisonService
     - Implement get_price_comparison method
     - Retrieve all prices for a medicine with select_related for pharmacy
     - Sort prices in ascending order
@@ -79,7 +81,7 @@ This implementation plan breaks down the Medicine Price Comparison system into d
     - **Property 4: Savings calculation correctness**
     - **Validates: Requirements 2.1, 2.2, 2.3, 2.5, 3.1, 3.2, 3.3**
   
-  - [~] 4.5 Create AlternativeFinderService
+  - [ ] 4.5 Create AlternativeFinderService
     - Implement find_alternatives method
     - Filter medicines by matching composition, excluding original medicine
     - For each alternative, get lowest price using order_by and first()
@@ -92,18 +94,18 @@ This implementation plan breaks down the Medicine Price Comparison system into d
     - **Property 7: Alternative sorting correctness**
     - **Validates: Requirements 4.1, 4.2, 4.3, 4.4**
 
-- [~] 5. Checkpoint - Ensure all tests pass
+- [ ] 5. Checkpoint - Ensure all tests pass
   - Run all property tests and unit tests
   - Verify business logic services work correctly
   - Ask the user if questions arise
 
 - [ ] 6. Implement views and URL routing
-  - [~] 6.1 Create home view
+  - [ ] 6.1 Create home view
     - Implement home view function to render search page
     - Create URL pattern for homepage (root path)
     - _Requirements: 6.1_
   
-  - [~] 6.2 Create search view
+  - [ ] 6.2 Create search view
     - Implement search view to handle search queries
     - Extract query parameter from GET request
     - Call MedicineSearchService to get results
@@ -111,7 +113,7 @@ This implementation plan breaks down the Medicine Price Comparison system into d
     - Handle empty query by redirecting to home
     - _Requirements: 1.1, 1.2, 1.3, 1.4_
   
-  - [~] 6.3 Create results view
+  - [ ] 6.3 Create results view
     - Implement results view to display price comparison and alternatives
     - Call PriceComparisonService to get price data
     - Call AlternativeFinderService to get alternatives
@@ -126,35 +128,35 @@ This implementation plan breaks down the Medicine Price Comparison system into d
     - Test edge cases (no prices, no alternatives)
     - _Requirements: 1.4, 6.1, 6.3_
 
-- [~] 7. Create Django forms
+- [ ] 7. Create Django forms
   - Create MedicineSearchForm with query field
   - Add Bootstrap CSS classes to form widgets
   - Add placeholder text and autocomplete attributes
   - _Requirements: 1.1, 6.1_
 
 - [ ] 8. Implement templates with Bootstrap 5
-  - [~] 8.1 Create base template
+  - [ ] 8.1 Create base template
     - Create base.html with Bootstrap 5 CDN links
     - Add navigation structure
     - Define content blocks for child templates
     - Add custom CSS link
     - _Requirements: 6.2_
   
-  - [~] 8.2 Create home template
+  - [ ] 8.2 Create home template
     - Create home.html extending base template
     - Add prominent search bar using MedicineSearchForm
     - Add hero section with application description
     - Style with Bootstrap components
     - _Requirements: 6.1_
   
-  - [~] 8.3 Create search results template
+  - [ ] 8.3 Create search results template
     - Create search_results.html for displaying medicine list
     - Display search query and result count
     - Show clickable medicine cards linking to results page
     - Handle empty results case
     - _Requirements: 1.3, 1.4_
   
-  - [~] 8.4 Create results template
+  - [ ] 8.4 Create results template
     - Create results.html for price comparison and alternatives
     - Display medicine details at top
     - Create price comparison table with pharmacy, price, last_updated columns
@@ -165,7 +167,7 @@ This implementation plan breaks down the Medicine Price Comparison system into d
     - Handle edge cases (no prices, no alternatives, single price)
     - _Requirements: 2.3, 2.4, 2.5, 3.4, 4.5, 6.3, 6.5_
 
-- [~] 9. Add custom styling and JavaScript
+- [ ] 9. Add custom styling and JavaScript
   - Create custom.css for additional styling beyond Bootstrap
   - Add hover effects for medicine cards
   - Style savings badge prominently
@@ -173,7 +175,7 @@ This implementation plan breaks down the Medicine Price Comparison system into d
   - Ensure responsive design works on mobile, tablet, desktop
   - _Requirements: 6.2_
 
-- [~] 10. Configure Django admin interface
+- [ ] 10. Configure Django admin interface
   - Register Medicine, Pharmacy, and Price models with admin
   - Customize admin list displays with relevant fields
   - Add search and filter capabilities in admin
@@ -181,7 +183,7 @@ This implementation plan breaks down the Medicine Price Comparison system into d
   - _Requirements: 5.1, 5.2, 5.3_
 
 - [ ] 11. Create seed data management command
-  - [~] 11.1 Implement seed_data management command
+  - [ ] 11.1 Implement seed_data management command
     - Create management/commands/seed_data.py
     - Create 20+ medicine records covering 5-6 compositions
     - Create 5-7 pharmacy records with realistic names
@@ -196,7 +198,7 @@ This implementation plan breaks down the Medicine Price Comparison system into d
     - Test that price variations exist across pharmacies
     - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5_
 
-- [~] 12. Checkpoint - Integration testing
+- [ ] 12. Checkpoint - Integration testing
   - Run seed_data command to populate database
   - Test complete user workflow: search → select → view results
   - Verify price comparison displays correctly
@@ -205,7 +207,7 @@ This implementation plan breaks down the Medicine Price Comparison system into d
   - Test edge cases with seed data
   - Ask the user if questions arise
 
-- [~] 13. Create project documentation
+- [ ] 13. Create project documentation
   - Create README.md with project overview
   - Document installation steps (pip install requirements)
   - Document database setup (migrations)
@@ -221,7 +223,7 @@ This implementation plan breaks down the Medicine Price Comparison system into d
   - Test all edge cases end-to-end
   - _Requirements: All_
 
-- [~] 15. Final checkpoint - Complete system verification
+- [ ] 15. Final checkpoint - Complete system verification
   - Run all tests (unit, property, integration)
   - Verify all requirements are met
   - Test responsive design manually
